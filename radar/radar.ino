@@ -2,15 +2,14 @@
 #include <Servo.h>
 #include <NewPing.h>
 
-#define TRIGGER_PIN  12  // Arduino pin tied to trigger pin on the ultrasonic sensor.
-#define ECHO_PIN     11  // Arduino pin tied to echo pin on the ultrasonic sensor.
-#define MAX_DISTANCE 80 // Maximum distance we want to ping for (in centimeters). Maximum sensor distance is rated at 400-500cm.
+#define TRIGGER_PIN  12  
+#define ECHO_PIN     11  
+#define MAX_DISTANCE 80 // Maxima distancia del sensor de proximidad
 
-NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); // NewPing setup of pins and maximum distance.
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE); 
 
 
-
-Servo s1;//create servo object to control a servo
+Servo s1;
 #define servoPin 10
 
 int ang = 85; //0-85-180
@@ -19,31 +18,27 @@ int dist;
 
 void setup()
 {
-  s1.attach(servoPin);//attachs the servo on pin 10 to servo object
-  s1.write(ang);//back to "90" degrees
-
+  s1.attach(servoPin);
+  s1.write(ang); //vuelta a 85 grados
 
   Serial.begin(9600); 
-  int s = 0;
+  int s = 0; //Especie de "handshaking" para comprobar la correcta conexion con java.
   while (s != 1)
   {
     Serial.write(1);
     s = Serial.read();
-  }
-  
-  delay(1000);//wait for a second
+  } 
+  delay(1000); 
 }
-/*************************************************/
+// bucle principal
 void loop()
 { 
   moverServo();
   delay(80);
   medirDistancia();
-  enviarDatos();
-  
+  enviarDatos();  
 }
-/**************************************************/
-
+// funciones auxiliares
 void moverServo()
 {
   if (ang <= 0){
@@ -61,13 +56,12 @@ void moverServo()
 
 void medirDistancia()
 {
-    dist = sonar.ping()  / US_ROUNDTRIP_CM;
-  
+    dist = sonar.ping()  / US_ROUNDTRIP_CM; // mide la distancia en cm
 }
 
 void enviarDatos()
 {
-Serial.println(ang);
-Serial.println(dist);  
+  Serial.println(ang);  //se envian tanto el angulo como la distancia
+  Serial.println(dist);  
 }
 
